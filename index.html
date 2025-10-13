@@ -12,121 +12,110 @@
       --main-green: #28a745;
       --main-red: #dc3545;
     }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f0f2f5;
       margin: 0 auto;
-      padding: 5px;
-      max-width: 375px;              /* chuẩn iPhone SE */
+      padding: 10px;
+      max-width: 430px;
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 6px;
+      gap: 10px;
       box-sizing: border-box;
     }
 
     section {
       background: white;
-      padding: 6px;
-      border-radius: 8px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     textarea, input {
-      font-size: 13px;
+      font-size: 15px;
       width: 100%;
-      padding: 5px;
-      margin-top: 3px;
-      border-radius: 6px;
+      padding: 8px;
+      margin-top: 6px;
+      border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
 
     /* Nút chính lấy ACC */
     #accCopyBtnTop {
-      font-size: 15px;
-      padding: 10px;
+      font-size: 18px;
+      padding: 14px;
       background: var(--main-green);
       color: white;
       border: none;
       width: 100%;
-      border-radius: 8px;
-      margin-bottom: 5px;
+      border-radius: 10px;
+      margin-bottom: 8px;
     }
 
     /* Nhóm nút ngang */
     .btn-group {
       display: flex;
-      gap: 5px;
-      margin-top: 4px;
+      gap: 8px;
+      margin-top: 6px;
       width: 100%;
     }
     .btn-group button {
-      flex: 1;
-      padding: 9px;
-      font-size: 13px;
-      border-radius: 6px;
+      flex: 1;                 /* 2 nút bằng nhau */
+      padding: 12px;
+      font-size: 14px;
+      border-radius: 8px;
     }
 
-    /* Header nút copy email */
-    .copy-header {
-      margin: 5px 0;
-      width: 100%;
-    }
-
+    /* Nút lấy & copy email */
     #emailCopyBtn {
-      position: relative;
-      width: 100%;
-      font-size: 15px;
-      padding: 10px;
+      font-size: 18px;
+      padding: 14px;
       background: var(--main-green);
       color: white;
       border: none;
-      border-radius: 8px;
-      text-align: left;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 8px;
     }
 
-    #emailCopyBtn #emailCount {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      font-weight: bold;
+    button {
+      background: var(--main-blue);
+      color: white;
+      border: none;
+      cursor: pointer;
     }
+    .btn-red { background: var(--main-red); }
 
     .input-container {
       display: flex;
-      gap: 4px;
-      margin-top: 4px;
+      gap: 6px;
+      margin-top: 6px;
       width: 100%;
     }
     .input-container input {
       flex: 1;
-      padding: 5px;
-      font-size: 13px;
+      padding: 8px;
     }
     .input-container button {
-      flex: 0 0 36px;
-      font-size: 16px;
+      flex: 0 0 44px;
+      font-size: 18px;
       padding: 0;
     }
 
-    #accInput, #emailInput {
-      height: 40px;
-      font-size: 13px;
-    }
-
     p {
-      font-size: 11px;
-      margin-top: 3px;
+      font-size: 13px;
+      margin-top: 4px;
     }
 
-    html, body {
-      overflow: hidden;
+    #accInput, #emailInput {
+      height: 55px;
+      font-size: 14px;
     }
+
+    html, body { overflow: hidden; }
 
     #customToast {
       position: fixed;
@@ -136,8 +125,8 @@
       background-color: #343a40;
       color: white;
       text-align: center;
-      padding: 10px;
-      font-size: 13px;
+      padding: 14px 10px;
+      font-size: 16px;
       font-weight: bold;
       z-index: 9999;
       transition: top 0.5s ease-in-out;
@@ -156,7 +145,7 @@
 
 <!-- ================= ACC MỸ ================= -->
 <section>
-  <textarea id="accInput" placeholder="Dán ACC Mỹ (xuống dòng hoặc , ; :)"></textarea>
+  <textarea id="accInput" placeholder="Dán ACC Mỹ (ngăn cách bằng xuống dòng hoặc , ; :)"></textarea>
   <div class="btn-group">
     <button id="accAddBtn">➕ Thêm ACC</button>
     <button id="accDeleteCurrentBtnTop" class="btn-red" title="Xóa ACC hiện tại">🗑️ Xóa ACC</button>
@@ -175,16 +164,12 @@
     <button id="emailAddBtn">➕ Thêm Email</button>
     <button id="emailDeleteAllBtn" class="btn-red" title="Xóa toàn bộ email">🗑️ Xóa Email</button>
   </div>
-  <div class="copy-header">
-    <button id="emailCopyBtn">
-      📋 Lấy & Copy Email
-      <span id="emailCount"></span>
-    </button>
-  </div>
   <div class="input-container">
     <input type="text" id="emailOutput" placeholder="Email hiển thị..." readonly>
     <button id="emailCopyManual" title="Copy Email">📋</button>
   </div>
+  <p id="emailCount"></p>
+  <button id="emailCopyBtn">📋 Lấy & Copy Email</button>
 </section>
 
 <script>
@@ -200,6 +185,7 @@
   };
   firebase.initializeApp(firebaseConfig);
 
+  // ================== TOAST ==================
   function showToast(msg, isError = false, isSuccess = false) {
     const toast = document.getElementById('customToast');
     toast.textContent = msg;
@@ -222,7 +208,7 @@
 
   accRef.on('value', snap => {
     accList = snap.val() || [];
-    document.getElementById('accCount').textContent = `📊 ${accList.length}`;
+    document.getElementById('accCount').textContent = `📊 ACC còn lại: ${accList.length}`;
   });
 
   document.getElementById('accAddBtn').addEventListener('click', () => {
@@ -247,8 +233,10 @@
   document.getElementById('accDeleteCurrentBtnTop').addEventListener('click', () => {
     const currentAcc = document.getElementById('accOutput').value.trim();
     if (!currentAcc) return showToast('⚠️ Không có ACC đang hiển thị', true);
+
     const index = accList.indexOf(currentAcc);
     if (index === -1) return showToast('⚠️ ACC này không còn trong danh sách', true);
+
     accRef.transaction(list => {
       if (!list) return [];
       list.splice(index, 1);
@@ -274,7 +262,7 @@
 
   emailRef.on('value', snap => {
     emailList = snap.val() || [];
-    document.getElementById('emailCount').textContent = emailList.length;
+    document.getElementById('emailCount').textContent = `📊 Email còn lại: ${emailList.length}`;
   });
 
   document.getElementById('emailAddBtn').addEventListener('click', () => {
