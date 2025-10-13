@@ -12,46 +12,25 @@
       --main-green: #28a745;
       --main-red: #dc3545;
     }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f0f2f5;
       margin: 0 auto;
-      padding: 0;
+      padding: 6px;
       max-width: 375px;
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      gap: 8px;
       box-sizing: border-box;
-    }
-
-    /* Nút lấy ACC trên cùng */
-    #accCopyBtnTop {
-      font-size: 16px;
-      padding: 12px;
-      background: var(--main-green);
-      color: white;
-      border: none;
-      width: 100%;
-      border-radius: 0;
     }
 
     section {
       background: white;
       padding: 8px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
-      border-radius: 0;            /* không bo góc để liền khối */
-    }
-
-    /* Bo góc trên cùng của phần đầu và dưới cùng của phần cuối */
-    section:first-of-type {
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
-    }
-    section:last-of-type {
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
     textarea, input {
@@ -64,9 +43,22 @@
       box-sizing: border-box;
     }
 
+    /* Nút chính lấy ACC */
+    #accCopyBtnTop {
+      font-size: 16px;
+      padding: 12px;
+      background: var(--main-green);
+      color: white;
+      border: none;
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 6px;
+    }
+
+    /* Nhóm nút ngang */
     .btn-group {
       display: flex;
-      gap: 4px;
+      gap: 6px;
       margin-top: 4px;
       width: 100%;
     }
@@ -74,9 +66,10 @@
       flex: 1;
       padding: 10px;
       font-size: 13px;
-      border-radius: 6px;
+      border-radius: 8px;
     }
 
+    /* Nút lấy & copy email */
     #emailCopyBtn {
       position: relative;
       font-size: 16px;
@@ -85,10 +78,10 @@
       color: white;
       border: none;
       width: 100%;
-      border-radius: 0 0 12px 12px;  /* bo tròn chỉ phần cuối */
+      border-radius: 10px;
+      margin-top: 6px;
       text-align: left;
     }
-
     #emailCount {
       position: absolute;
       right: 12px;
@@ -108,7 +101,7 @@
 
     .input-container {
       display: flex;
-      gap: 4px;
+      gap: 5px;
       margin-top: 4px;
       width: 100%;
     }
@@ -124,12 +117,11 @@
 
     p {
       font-size: 11px;
-      margin-top: 2px;
-      margin-bottom: 0;
+      margin-top: 3px;
     }
 
     #accInput, #emailInput {
-      height: 40px;
+      height: 42px;
       font-size: 13px;
     }
 
@@ -163,7 +155,7 @@
 
 <!-- ================= ACC MỸ ================= -->
 <section>
-  <textarea id="accInput" placeholder="Dán ACC Mỹ (xuống dòng hoặc , ; :)"></textarea>
+  <textarea id="accInput" placeholder="Dán ACC Mỹ (ngăn cách bằng xuống dòng hoặc , ; :)"></textarea>
   <div class="btn-group">
     <button id="accAddBtn">➕ Thêm ACC</button>
     <button id="accDeleteCurrentBtnTop" class="btn-red" title="Xóa ACC hiện tại">🗑️ Xóa ACC</button>
@@ -186,10 +178,8 @@
     <input type="text" id="emailOutput" placeholder="Email hiển thị..." readonly>
     <button id="emailCopyManual" title="Copy Email">📋</button>
   </div>
+  <button id="emailCopyBtn">📋 Lấy & Copy Email <span id="emailCount"></span></button>
 </section>
-
-<!-- 📋 Nút copy email dưới cùng -->
-<button id="emailCopyBtn">📋 Lấy & Copy Email <span id="emailCount"></span></button>
 
 <script>
   // ================== FIREBASE ==================
@@ -308,11 +298,12 @@
 
   document.getElementById('emailCopyBtn').addEventListener('click', () => {
     if (emailList.length === 0) return showToast('⚠️ Hết email', true);
-    const email = emailList[0];
+    const index = Math.floor(Math.random() * emailList.length);
+    const email = emailList[index];
     document.getElementById('emailOutput').value = email;
     copyText(email);
     emailRef.transaction(list => {
-      list.splice(0, 1);
+      list.splice(index, 1);
       return list;
     });
   });
