@@ -16,79 +16,69 @@
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f0f2f5;
       margin: 0 auto;
-      padding: 6px;
-      max-width: 375px;
+      padding: 10px;
+      max-width: 430px;
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       box-sizing: border-box;
     }
 
     section {
       background: white;
-      padding: 8px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     textarea, input {
-      font-size: 14px;
+      font-size: 15px;
       width: 100%;
-      padding: 6px;
-      margin-top: 4px;
-      border-radius: 6px;
+      padding: 8px;
+      margin-top: 6px;
+      border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
 
     /* Nút chính lấy ACC */
     #accCopyBtnTop {
-      font-size: 16px;
-      padding: 12px;
+      font-size: 18px;
+      padding: 14px;
       background: var(--main-green);
       color: white;
       border: none;
       width: 100%;
       border-radius: 10px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     /* Nhóm nút ngang */
     .btn-group {
       display: flex;
-      gap: 6px;
-      margin-top: 4px;
+      gap: 8px;
+      margin-top: 6px;
       width: 100%;
     }
     .btn-group button {
-      flex: 1;
-      padding: 10px;
-      font-size: 13px;
+      flex: 1;                 /* 2 nút bằng nhau */
+      padding: 12px;
+      font-size: 14px;
       border-radius: 8px;
     }
 
     /* Nút lấy & copy email */
     #emailCopyBtn {
-      position: relative;
-      font-size: 16px;
-      padding: 12px;
+      font-size: 18px;
+      padding: 14px;
       background: var(--main-green);
       color: white;
       border: none;
       width: 100%;
       border-radius: 10px;
-      margin-top: 6px;
-      text-align: left;
-    }
-    #emailCount {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 15px;
-      font-weight: bold;
+      margin-top: 8px;
     }
 
     button {
@@ -101,28 +91,28 @@
 
     .input-container {
       display: flex;
-      gap: 5px;
-      margin-top: 4px;
+      gap: 6px;
+      margin-top: 6px;
       width: 100%;
     }
     .input-container input {
       flex: 1;
-      padding: 6px;
+      padding: 8px;
     }
     .input-container button {
-      flex: 0 0 38px;
-      font-size: 16px;
+      flex: 0 0 44px;
+      font-size: 18px;
       padding: 0;
     }
 
     p {
-      font-size: 11px;
-      margin-top: 3px;
+      font-size: 13px;
+      margin-top: 4px;
     }
 
     #accInput, #emailInput {
-      height: 42px;
-      font-size: 13px;
+      height: 55px;
+      font-size: 14px;
     }
 
     html, body { overflow: hidden; }
@@ -135,8 +125,8 @@
       background-color: #343a40;
       color: white;
       text-align: center;
-      padding: 10px;
-      font-size: 13px;
+      padding: 14px 10px;
+      font-size: 16px;
       font-weight: bold;
       z-index: 9999;
       transition: top 0.5s ease-in-out;
@@ -178,7 +168,8 @@
     <input type="text" id="emailOutput" placeholder="Email hiển thị..." readonly>
     <button id="emailCopyManual" title="Copy Email">📋</button>
   </div>
-  <button id="emailCopyBtn">📋 Lấy & Copy Email <span id="emailCount"></span></button>
+  <p id="emailCount"></p>
+  <button id="emailCopyBtn">📋 Lấy & Copy Email</button>
 </section>
 
 <script>
@@ -217,7 +208,7 @@
 
   accRef.on('value', snap => {
     accList = snap.val() || [];
-    document.getElementById('accCount').textContent = `📊 ${accList.length}`;
+    document.getElementById('accCount').textContent = `📊 ACC còn lại: ${accList.length}`;
   });
 
   document.getElementById('accAddBtn').addEventListener('click', () => {
@@ -242,8 +233,10 @@
   document.getElementById('accDeleteCurrentBtnTop').addEventListener('click', () => {
     const currentAcc = document.getElementById('accOutput').value.trim();
     if (!currentAcc) return showToast('⚠️ Không có ACC đang hiển thị', true);
+
     const index = accList.indexOf(currentAcc);
     if (index === -1) return showToast('⚠️ ACC này không còn trong danh sách', true);
+
     accRef.transaction(list => {
       if (!list) return [];
       list.splice(index, 1);
@@ -269,7 +262,7 @@
 
   emailRef.on('value', snap => {
     emailList = snap.val() || [];
-    document.getElementById('emailCount').textContent = emailList.length;
+    document.getElementById('emailCount').textContent = `📊 Email còn lại: ${emailList.length}`;
   });
 
   document.getElementById('emailAddBtn').addEventListener('click', () => {
