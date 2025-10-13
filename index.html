@@ -69,18 +69,6 @@
       border-radius: 8px;
     }
 
-    /* Nút lấy & copy email */
-    #emailCopyBtn {
-      font-size: 18px;
-      padding: 14px;
-      background: var(--main-green);
-      color: white;
-      border: none;
-      width: 100%;
-      border-radius: 10px;
-      margin-top: 8px;
-    }
-
     button {
       background: var(--main-blue);
       color: white;
@@ -134,6 +122,28 @@
     #customToast.show { top: 0; }
     #customToast.error { background-color: #d93025; }
     #customToast.success { background-color: #28a745; }
+
+    /* ✅ Nút lấy & copy email đã chỉnh sửa */
+    #emailCopyBtn {
+      font-size: 18px;
+      padding: 0;
+      background: var(--main-green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      width: 44px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* ✅ Số lượng email nằm trong nút */
+    #emailCopyBtn span {
+      font-size: 13px;
+      font-weight: bold;
+      margin-left: 3px;
+    }
   </style>
 </head>
 <body>
@@ -166,10 +176,9 @@
   </div>
   <div class="input-container">
     <input type="text" id="emailOutput" placeholder="Email hiển thị..." readonly>
-    <button id="emailCopyManual" title="Copy Email">📋</button>
+    <!-- ✅ Nút copy + hiển thị số lượng bên trong -->
+    <button id="emailCopyBtn" title="Lấy & Copy Email">📋 <span id="emailCount"></span></button>
   </div>
-  <p id="emailCount"></p>
-  <button id="emailCopyBtn">📋 Lấy & Copy Email</button>
 </section>
 
 <script>
@@ -262,7 +271,7 @@
 
   emailRef.on('value', snap => {
     emailList = snap.val() || [];
-    document.getElementById('emailCount').textContent = `📊 Email còn lại: ${emailList.length}`;
+    document.getElementById('emailCount').textContent = emailList.length;
   });
 
   document.getElementById('emailAddBtn').addEventListener('click', () => {
@@ -281,12 +290,6 @@
     if (!confirm('Xóa toàn bộ email?')) return;
     emailRef.set([]);
     showToast('🗑️ Đã xóa toàn bộ email', false, true);
-  });
-
-  document.getElementById('emailCopyManual').addEventListener('click', () => {
-    const email = document.getElementById('emailOutput').value;
-    if (!email) return showToast('⚠️ Không có email để copy', true);
-    copyText(email);
   });
 
   document.getElementById('emailCopyBtn').addEventListener('click', () => {
